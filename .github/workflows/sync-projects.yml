@@ -1,0 +1,32 @@
+name: Github Sync Projects
+
+on:
+  workflow_dispatch:
+    inputs:
+      debug:
+        type: choice
+        options:
+          - true
+          - false
+
+jobs:
+  sync-project:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+      repository-projects: write
+    steps:
+      - name: Sync Projects
+        uses: ./
+        with:
+          github-token: "${{ secrets.ACCESS_TOKEN }}"
+          project-source: "${{ vars.PROJECT_SOURCE }}"
+          project-target: "${{ vars.PROJECT_TARGET }}"
+          column-todo-source: "${{ vars.COLUMN_TODO_SOURCE }}"
+          column-todo-target: "${{ vars.COLUMN_TODO_TARGET }}"
+          column-inprogress-source: "${{ vars.COLUMN_INPROGRESS_SOURCE }}"
+          column-inprogress-target: "${{ vars.COLUMN_INPROGRESS_TARGET }}"
+          column-done-source: "${{ vars.COLUMN_DONE_SOURCE }}"
+          column-done-target: "${{ vars.COLUMN_DONE_TARGET }}"
+          debug: "${{ github.event.inputs.debug }}"

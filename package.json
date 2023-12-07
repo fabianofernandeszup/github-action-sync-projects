@@ -1,0 +1,30 @@
+{
+  "name": "github-action-organize-cards-columns-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "ncc build index.js -o dist --source-map --license licenses.txt",
+    "local": "node local.js "
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chiaretto/github-action-concat-pr-body.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/chiaretto/github-action-organize-cards-columns-project/issues"
+  },
+  "homepage": "https://github.com/chiaretto/github-action-organize-cards-columns-project#readme",
+  "dependencies": {
+    "@actions/core": "^1.2.3",
+    "@actions/github": "^2.1.1",
+    "@octokit/graphql": "^5.0.5",
+    "@octokit/graphql-schema": "^13.7.0",
+    "@vercel/ncc": "^0.28.6",
+    "dotenv": "^16.3.1",
+    "octokit": "^2.0.14"
+  }
+}

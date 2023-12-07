@@ -1,0 +1,19 @@
+name: "Github Sync Projects"
+description: "Github Sync Projects"
+author: "Fabiano Chiaretto Fernandes"
+branding:
+  icon: "edit"
+  color: "purple"
+runs:
+  using: "node16"
+  main: "dist/index.js"
+inputs:
+  github-token:
+    description: "The GITHUB_TOKEN secret"
+    required: true
+  debug:
+    description: "Debug GraphQL"
+    required: false
+  allowed-repos:
+    description: "Allowed Repos that are not the one which started the action"
+    required: false
