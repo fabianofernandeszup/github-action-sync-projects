@@ -51,10 +51,10 @@ jobs:
         uses: fabianofernandes/github-action-sync-projects
         with:
           github-token: "${{ secrets.ACCESS_TOKEN }}"
-          github-owner-source: "${{ github.repository_owner }}"
-          github-repo-source: "${{ github.events.repository.name }}"
-          github-owner-target: "fabianofernandeszup"
-          github_repo_target: "repo-qa"
+          owner-source: "${{ github.repository_owner }}"
+          repo-source: "${{ github.events.repository.name }}"
+          owner-target: "fabianofernandeszup"
+          repo_target: "repo-qa"
           project-source: "Project Eng"
           project-target: "Project QA 📝"
           columns-source: "🏳 - Ready For QA,🧪 - Testing QA,✅ - Ready for Prod"

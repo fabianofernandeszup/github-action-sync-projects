@@ -11,13 +11,13 @@ inputs:
   github-token:
     description: "The GITHUB_TOKEN secret"
     required: true
-  github-owner-source:
+  owner-source:
     required: true
-  github-repo-source:
+  repo-source:
     required: true
-  github-owner-target:
+  owner-target:
     required: true
-  github-repo-target:
+  repo-target:
     required: true
   project-source:
     required: true
