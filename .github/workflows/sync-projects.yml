@@ -21,16 +21,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3.5.3
 
-      - run: echo ${{ github.events.repository }}
-
       - name: Sync Projects
         uses: ./
         with:
           github-token: "${{ secrets.ACCESS_TOKEN }}"
-          owner-source: "${{ github.repository_owner }}"
-          repo-source: "${{ github.repository.splig(/)[-1] }}"
-          owner-target: "fabianofernandeszup"
-          repo-target: "repo-qa"
+          repo-source: "${{ github.repository }}"
+          repo-target: "fabianofernandeszup/repo-qa"
           project-source: "Project Eng"
           project-target: "Project QA 📝"
           columns-source: "🏳 - Ready For QA,🧪 - Testing QA,✅ - Ready for Prod"
