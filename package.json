@@ -9,15 +9,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/chiaretto/github-action-sync-projects.git"
+    "url": "git+https://github.com/fabianofernandes/github-action-sync-projects.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/chiaretto/github-action-sync-projects/issues"
+    "url": "https://github.com/fabianofernandes/github-action-sync-projects/issues"
   },
-  "homepage": "https://github.com/chiaretto/github-action-sync-projects#readme",
+  "homepage": "https://github.com/fabianofernandes/github-action-sync-projects#readme",
   "dependencies": {
     "@actions/core": "^1.2.3",
     "@actions/github": "^2.1.1",
