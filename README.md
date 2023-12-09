@@ -1,4 +1,4 @@
-# github-action-organize-cards-columns-project
+# github-action-sync-projects
 
 This action will replicate icon of project columns to cards of column.
 The name of columns need use a icon separate by hifen, like "😀 - Column Name", them all card will be title with icon "😀 Name of Card".
@@ -28,24 +28,36 @@ Optional - Enables update issues from other repositories that relies on the proj
 ## Example usage
 
 ```
-name: Update Cards Project
+name: Github Sync Projects
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron:  '*/5 * * * *'
+    inputs:
+      debug:
+        type: choice
+        options:
+          - true
+          - false
 
 jobs:
-  update-cards:
+  sync-project:
     runs-on: ubuntu-latest
     permissions:
       issues: write
       pull-requests: write
       repository-projects: write
     steps:
-      - name: Update Card Project
-        uses: chiaretto/github-action-organize-cards-columns-project@master
+      - name: Sync Projects
+        uses: fabianofernandes/github-action-sync-projects
         with:
-          github-token: "${{ secrets.GITHUB_TOKEN }}"
-          allowed-repos: "other-repo,another-repo"
+          github-token: "${{ secrets.ACCESS_TOKEN }}"
+          github-owner-source: "${{ github.repository_owner }}"
+          github-repo-source: "${{ github.events.repository.name }}"
+          github-owner-target: "fabianofernandeszup"
+          github_repo_target: "repo-qa"
+          project-source: "Project Eng"
+          project-target: "Project QA 📝"
+          columns-source: "🏳 - Ready For QA,🧪 - Testing QA,✅ - Ready for Prod"
+          columns-target: "Todo,In Progress,Done"
+          debug: "${{ github.event.inputs.debug }}"
 ```

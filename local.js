@@ -11,12 +11,8 @@ const inputs = {
     repo_target: process.env.GITHUB_REPO_TARGET,
     project_source: process.env.PROJECT_SOURCE,
     project_target: process.env.PROJECT_TARGET,
-    column_todo_source: process.env.COLUMN_TODO_SOURCE,
-    column_todo_target: process.env.COLUMN_TODO_TARGET,
-    column_inprogress_source: process.env.COLUMN_INPROGRESS_SOURCE,
-    column_inprogress_target: process.env.COLUMN_INPROGRESS_TARGET,
-    column_done_source: process.env.COLUMN_DONE_SOURCE,
-    column_done_target: process.env.COLUMN_DONE_TARGET,
+    columns_source: process.env.COLUMNS_SOURCE,
+    columns_target: process.env.COLUMNS_TARGET,
   };
 
 if (process.env.local) {
