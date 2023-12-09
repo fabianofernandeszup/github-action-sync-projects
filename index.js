@@ -44,13 +44,13 @@ async function processWithInputs(inputs) {
     console.log("########### Error: Source Project was not found with name: ["+inputs.project_source+"] ###############")
     process.exit(1)
   } else {
-    console.log("########### Source project found with name: ["+inputs.project_source+"] ###############")
+    console.log("########### Source project found with name: ["+inputs.project_source+"] id: ["+projectSource.id+"] ###############")
   }
   if (!projectTarget) {
     console.log("########### Error: Target Project was not found with name: ["+inputs.project_target+"] ###############")
     process.exit(1)
   } else {
-    console.log("########### Target project found with name: ["+inputs.project_target+"] ###############")
+    console.log("########### Target project found with name: ["+inputs.project_target+"] id: ["+projectTarget.id+"] ###############")
   }
 
   const name_columns_source = inputs.columns_source.split(',')
@@ -196,10 +196,10 @@ async function runMutations(token, mutations) {
 }
 
 async function getProjectCards(token, projectId, name_columns, no_status = false) {
-  let perPage = 50;
+  let perPage = 100;
   let hasNextPage = false
   let endCursor = ''
-  let cards = {}
+  let cards = []
   do {
     let queryEndCursor = endCursor !== '' ? `, after: "` + endCursor + `"` : '';
 
@@ -252,12 +252,16 @@ async function getProjectCards(token, projectId, name_columns, no_status = false
     }`
 
     const {node} = await execQuery(token, 'queryGetCards', queryGetCards);
-
-    cards = node?.items?.nodes.filter((card) =>
-        (no_status || card.fieldValueByName !== null) &&
-        card.type !== 'DRAFT_ISSUE' &&
-        (no_status || name_columns.includes(card.fieldValueByName.name))
+    let filtred_cards = node?.items?.nodes.filter((card) => {
+         return (no_status || card.fieldValueByName !== null) &&
+          card.type !== 'DRAFT_ISSUE' &&
+          (no_status || name_columns.includes(card.fieldValueByName.name))
+        }
     )
+    if (filtred_cards.length) {
+      cards = [...cards, ...filtred_cards]
+    }
+
     let pageInfo = node.items.pageInfo;
     hasNextPage = pageInfo.hasNextPage;
     endCursor = pageInfo.endCursor;
