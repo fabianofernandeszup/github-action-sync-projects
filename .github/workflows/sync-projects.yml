@@ -21,6 +21,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3.5.3
 
+      - run: echo ${{ github.events.repository }}
+
       - name: Sync Projects
         uses: ./
         with:
