@@ -1,7 +1,6 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
 const { graphql } = require("@octokit/graphql");
-const { Repository } = require("@octokit/graphql-schema");
 
 debugEnabled = true
 const STATUS_FIELD = "Status"
@@ -316,10 +315,15 @@ async function run() {
   try {
     const inputs = {
       token: core.getInput('github-token', {required: true}),
-      allowedRepos: core.getInput('allowed-repos', {required: false}),
       debug: core.getInput('debug', {required: false}),
-      owner: github.context.repo.owner,
-      repo: github.context.repo.repo,
+      owner_source: core.getInput('owner-source', {required: true}),
+      repo_source: core.getInput('repo-source', {required: true}),
+      owner_target: core.getInput('owner-target', {required: true}),
+      repo_target: core.getInput('repo-target', {required: true}),
+      project_source: core.getInput('project-source', {required: true}),
+      project_target: core.getInput('project-target', {required: true}),
+      columns_source: core.getInput('columns-source', {required: true}),
+      columns_target: core.getInput('columns-target', {required: true}),
     };
 
     await processWithInputs(inputs);

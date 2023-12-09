@@ -11,6 +11,22 @@ inputs:
   github-token:
     description: "The GITHUB_TOKEN secret"
     required: true
+  github-owner-source:
+    required: true
+  github-repo-source:
+    required: true
+  github-owner-target:
+    required: true
+  github-repo-target:
+    required: true
+  project-source:
+    required: true
+  project-target:
+    required: true
+  columns-source:
+    required: true
+  columns-target:
+    required: true
   debug:
     description: "Debug GraphQL"
     required: false

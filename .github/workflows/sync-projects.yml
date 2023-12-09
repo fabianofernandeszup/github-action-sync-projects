@@ -28,7 +28,7 @@ jobs:
           github-owner-source: "${{ github.repository_owner }}"
           github-repo-source: "${{ github.events.repository.name }}"
           github-owner-target: "fabianofernandeszup"
-          github_repo_target: "repo-qa"
+          github-repo-target: "repo-qa"
           project-source: "Project Eng"
           project-target: "Project QA 📝"
           columns-source: "🏳 - Ready For QA,🧪 - Testing QA,✅ - Ready for Prod"
