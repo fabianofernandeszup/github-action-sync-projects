@@ -1,29 +1,48 @@
 # github-action-sync-projects
 
-This action will replicate icon of project columns to cards of column.
-The name of columns need use a icon separate by hifen, like "😀 - Column Name", them all card will be title with icon "😀 Name of Card".
-When a card change of column, the icon will be updated from this column.
+This action will replicate the cards from source project to target project and sync columns especificadas.
 
-> ps: Single or double quotes are removed from card titles.
+The card will be create in target project, but not will be created in the source project.
 
-### Example Board
+When a card change of column in target project, that will be updated in source project, but unlike does not happen.
+
+After a card move to first sync column of source project, this need be moved only in target project, until the last column, after this them car be moved in the source project.
+
+> ps: This action only sync card of ISSUE and PULL REQUESTS. DRAFT ISSUES will be not sync.
+
+### Example Board Project Source
 https://github.com/users/chiaretto/projects/2/views/1
 
-![Board Image](docs/board.png "Board")
+![Board Image](docs/projeto-eng.png "Board")
 
-### Unicode Icons
-https://unicode.org/emoji/charts/full-emoji-list.html
+
+### Example Board Project Target
+https://github.com/users/chiaretto/projects/2/views/1
+
+![Board Image](docs/projeto-qa.png "Board")
+
+
+### Example Board Project Source Workflow
+https://github.com/users/chiaretto/projects/2/views/1
+
+![Board Image](docs/workflow.png "Board")
 
 ## Inputs
 
-### `github-token`
-
-**Required** `${{ secrets.GITHUB_TOKEN }}`
-
-### `allowed-repos`
-
-Optional - Enables update issues from other repositories that relies on the project
-`allowed-repos: 'repo1,repo2,repo3'`
+### `github-token`: `${{ secrets.GITHUB_TOKEN }}`
+**Required** 
+### `repo-source`: `${{ github.repository  }}`
+**Required**
+### `repo-target`: `owener/repo`
+**Required** 
+### `project-source`: `Project Source Name`
+**Required**
+### `project-target`: `Project Target Name`
+**Required**
+### `columns-source`: `ColumnSource1, ColumnSource2, ColumnSource3`
+**Required**
+### `columns-target`: `ColumnTarget1, ColumnTarget2, ColumnTarget3`
+**Required**
 
 ## Example usage
 
@@ -48,11 +67,11 @@ jobs:
       repository-projects: write
     steps:
       - name: Sync Projects
-        uses: fabianofernandes/github-action-sync-projects
+        uses: chiaretto/github-action-sync-projects
         with:
           github-token: "${{ secrets.ACCESS_TOKEN }}"
           repo-source: "${{ github.repository }}"
-          repo-target: "fabianofernandeszup/repo-qa"
+          repo-target: "owner/repo-name"
           project-source: "Project Eng"
           project-target: "Project QA 📝"
           columns-source: "🏳 - Ready For QA,🧪 - Testing QA,✅ - Ready for Prod"

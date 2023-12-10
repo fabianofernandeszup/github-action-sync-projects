@@ -27,35 +27,12 @@ async function processWithInputs(inputs) {
   debugEnabled = inputs.debug == 'true'
   showDebug(inputs);
   // Get Projects From Repo
-  let projectsSource = await getRepositoryProjects(inputs.token, inputs.owner_source, inputs.repo_source);
-  let projectsTarget = await getRepositoryProjects(inputs.token, inputs.owner_target, inputs.repo_target);
-  if (projectsSource?.length===0) {
-    console.log("########### Error: No projects found in repo source: ["+inputs.owner_source+"/"+inputs.repo_source+"] ###############")
-    process.exit(1)
-  }
-  if (projectsSource?.length===0) {
-    console.log("########### Error: No projects found in repo source ["+inputs.owner_target+"/"+inputs.repo_target+"] ###############")
-    process.exit(1)
-  }
+  let projectSource = await getRepositoryProjects(inputs.token, inputs.owner_source, inputs.repo_source, inputs.project_source);
+  let projectTarget = await getRepositoryProjects(inputs.token, inputs.owner_target, inputs.repo_target, inputs.project_target);
 
-  const projectSource = projectsSource.filter((p) => p.title === inputs.project_source).pop()
-  const projectTarget = projectsTarget.filter((p) => p.title === inputs.project_target).pop()
-  if (!projectSource) {
-    console.log("########### Error: Source Project was not found with name: ["+inputs.project_source+"] ###############")
-    process.exit(1)
-  } else {
-    console.log("########### Source project found with name: ["+inputs.project_source+"] id: ["+projectSource.id+"] ###############")
-  }
-  if (!projectTarget) {
-    console.log("########### Error: Target Project was not found with name: ["+inputs.project_target+"] ###############")
-    process.exit(1)
-  } else {
-    console.log("########### Target project found with name: ["+inputs.project_target+"] id: ["+projectTarget.id+"] ###############")
-  }
-
+  // Check Columns Inputs
   const name_columns_source = inputs.columns_source.split(',')
   const name_columns_target = inputs.columns_target.split(',')
-
   if (name_columns_source.length !== name_columns_target.length) {
     console.log("########### Error: The source and target columns must have the same number ###############")
     console.log("########### Error: Target columns length: ["+name_columns_source.length+"] ###############")
@@ -66,13 +43,14 @@ async function processWithInputs(inputs) {
     console.log("########### Source columns found: ["+name_columns_target.toString()+"] ###############")
   }
 
+  // Check Columns Project Source
   const columns_source = await getProjectColumns(inputs.token, projectSource.id)
   const check_columns_source = name_columns_source.filter((name_column) => ! columns_source.options.some((option) => option.name === name_column))
   if (check_columns_source.length > 0 ) {
     console.log("########### Error: Some columns were not found in the source project: ["+check_columns_source.toString()+"] ###############")
     process.exit(1)
   }
-
+  // Check Columns Project Target
   const columns_target = await getProjectColumns(inputs.token, projectTarget.id)
   const check_columns_target = name_columns_target.filter((name_column) => ! columns_target.options.some((option) => option.name === name_column))
   if (check_columns_target.length > 0 ) {
@@ -80,19 +58,22 @@ async function processWithInputs(inputs) {
     process.exit(1)
   }
 
+  // Get Cards
   const card_source = await getProjectCards(inputs.token, projectSource.id, name_columns_source);
   const card_target = await getProjectCards(inputs.token, projectTarget.id, name_columns_target);
 
+  // Add Cards to add on Target Project and move to first coolumn
   const new_cards_target = await addNewCardsToTarget(inputs.token, card_source, card_target, projectTarget.id)
   await moveNewCardsOnTarget(inputs.token, card_source, new_cards_target, projectTarget.id, columns_source, columns_target, name_columns_source, name_columns_target)
 
+  // Sync all card from source project to right column
   const all_card_target = await getProjectCards(inputs.token, projectTarget.id, name_columns_target);
   await moveAllCardsOnSource(inputs.token, card_source, all_card_target, projectSource.id, columns_source, columns_target, name_columns_source, name_columns_target)
 
   showLog("Done")
 }
 
-async function getRepositoryProjects(token, owner, repo) {
+async function getRepositoryProjects(token, owner, repo, projectName) {
   // Get Projects From Repo
   let queryRepo = `{
     repository(owner: "`+owner+`", name: "`+repo+`") {
@@ -106,8 +87,23 @@ async function getRepositoryProjects(token, owner, repo) {
     }`
 
   const { repository } = await execQuery(token, 'queryRepo', queryRepo);
+  const projects = repository?.projectsV2?.nodes
 
-  return repository?.projectsV2?.nodes
+  if (projects?.length===0) {
+    console.log("########### Error: No projects found in repo: ["+owner+"/"+repo+"] ###############")
+    process.exit(1)
+  }
+
+  const projectFiltred = projects.filter((p) => p.title === projectName).pop()
+
+  if (!projectFiltred) {
+    console.log("########### Error: Project was not found in repo ["+owner+"/"+repo+"] with name: ["+projectName+"] ###############")
+    process.exit(1)
+  } else {
+    console.log("########### Project found in repo ["+owner+"/"+repo+"] with name: ["+projectName+"] id: ["+projectFiltred.id+"] ###############")
+  }
+
+  return projectFiltred
 }
 
 async function addNewCardsToTarget(token, card_source, card_target, projectId) {
@@ -185,7 +181,7 @@ async function runMutations(token, mutations) {
   const chunkMutations = sliceIntoChunks(mutations, perPage);
   let clientMutationsId = []
   for (chunk of chunkMutations) {
-    const queryMutation = `mutation {` + chunk.join('\n') + `}`;    
+    const queryMutation = `mutation {` + chunk.join('\n') + `}`;
     const clientMutationId = await execQuery(token, 'queryMutation', queryMutation);
     for (const [key, value] of Object.entries(clientMutationId)) {
       clientMutationsId.push(value)
