@@ -62,13 +62,19 @@ async function processWithInputs(inputs) {
   const card_source = await getProjectCards(inputs.token, projectSource.id, name_columns_source);
   const card_target = await getProjectCards(inputs.token, projectTarget.id, name_columns_target);
 
+  // Show Stats
+  console.log("######### Source Analized Cards: "+card_source.length)
+  console.log("######### Target Analized Cards: "+card_target.length)
+
   // Add Cards to add on Target Project and move to first coolumn
   const new_cards_target = await addNewCardsToTarget(inputs.token, card_source, card_target, projectTarget.id)
   await moveNewCardsOnTarget(inputs.token, card_source, new_cards_target, projectTarget.id, columns_source, columns_target, name_columns_source, name_columns_target)
 
-  // Sync all card from source project to right column
-  const all_card_target = await getProjectCards(inputs.token, projectTarget.id, name_columns_target);
-  await moveAllCardsOnSource(inputs.token, card_source, all_card_target, projectSource.id, columns_source, columns_target, name_columns_source, name_columns_target)
+  console.log("######### SYNC DISABLED ###########")
+
+  // // Sync all card from source project to right column
+  // const all_card_target = await getProjectCards(inputs.token, projectTarget.id, name_columns_target);
+  // await moveAllCardsOnSource(inputs.token, card_source, all_card_target, projectSource.id, columns_source, columns_target, name_columns_source, name_columns_target)
 
   showLog("Done")
 }
